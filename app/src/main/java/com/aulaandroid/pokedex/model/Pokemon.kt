@@ -12,6 +12,7 @@ data class Pokemon(
     val weight: Int,
     val abilities : List<PokemonAbility>,
     val types: List<PokemonType>,
+    val sprites: PokemonSprites,
     val stats: List<PokemonStat>
 ) {
  val nomesDasHabilidades: List<String>
@@ -23,6 +24,17 @@ data class Pokemon(
     val statusFormatados: List<Pair<String, Int>>
         get() = stats.map { Pair(it.stat.name, it.baseStat) }
 }
+
+data class PokemonSprites(
+    @SerializedName("front_default")
+    val other: OtherSprites
+)
+
+data class OtherSprites(
+    @SerializedName("official-artwork")
+    val officialArtwork: OfficialArtwork
+)
+
 
 data class NamedAPIResource(
     val name: String
@@ -41,3 +53,10 @@ data class PokemonStat(
     val baseStat: Int,
     val stat: NamedAPIResource
 )
+
+data class OfficialArtwork(
+    @SerializedName("front_default")
+    val frontDefault: String
+)
+
+
