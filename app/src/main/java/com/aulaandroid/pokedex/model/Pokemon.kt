@@ -26,13 +26,12 @@ data class Pokemon(
 }
 
 data class PokemonSprites(
-    @SerializedName("front_default")
-    val other: OtherSprites
+    val other: OtherSprites?
 )
 
 data class OtherSprites(
     @SerializedName("official-artwork")
-    val officialArtwork: OfficialArtwork
+    val officialArtwork: OfficialArtwork?
 )
 
 
@@ -56,7 +55,7 @@ data class PokemonStat(
 
 data class OfficialArtwork(
     @SerializedName("front_default")
-    val frontDefault: String
+    val frontDefault: String?
 )
 
 

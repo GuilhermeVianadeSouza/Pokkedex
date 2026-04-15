@@ -27,6 +27,13 @@ enum class PokemonType(val typeName: String, val color: Color){
     NORMAL("normal", Color(0xFFA8A878))
 }
 
+fun obterCorPorTipo(tipo: String?): Color {
+    val tipoEncontrado = PokemonType.entries.find {
+        it.typeName == tipo?.lowercase()
+    }
+    return tipoEncontrado?.color ?: Color.Gray
+}
+
 val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)

@@ -28,27 +28,39 @@ class PokemonViewModel : ViewModel(){
         carregarListaPokemon()
     }
 
+
     public fun carregarListaPokemon() {
         if (isLoading) return
 
         viewModelScope.launch {
             isLoading = true
             try {
-                    val response = pokedexService.buscarListaPokemon(limit = limit, offset = currentOffset)
-                    if (response.isSuccessful){
-                        val resultados = response.body()?.results ?: emptyList()
-                        val listaTemporaria = mutableStateListOf<Pokemon>()
-                        for (resultado in resultados){
-                            val detalheResponse = pokedexService.buscarPokemon(resultado.name)
-                            if (detalheResponse.isSuccessful){
-                                detalheResponse.body()?.let { pokemonDetalhe ->
-                                    listaTemporaria.add((pokemonDetalhe))
-                                }
+                val response = pokedexService.buscarListaPokemon(limit = limit, offset = currentOffset)
+
+                if (response.isSuccessful){
+                    val resultados = response.body()?.results ?: emptyList()
+
+
+                    val listaTemporaria = mutableListOf<Pokemon>()
+
+                    for (resultado in resultados){
+                        val detalheResponse = pokedexService.buscarPokemon(resultado.name)
+                        if (detalheResponse.isSuccessful){
+                            detalheResponse.body()?.let { pokemonDetalhe ->
+                                listaTemporaria.add(pokemonDetalhe)
                             }
+                        } else {
+                            Log.e("API_ERRO", "Erro ao buscar detalhes de ${resultado.name}: Código ${detalheResponse.code()}")
                         }
-                        _listaPokemon.value = listaPokemon.value + listaTemporaria
-                        currentOffset += limit
                     }
+
+                    _listaPokemon.value = _listaPokemon.value + listaTemporaria
+                    currentOffset += limit
+
+                } else {
+                    Log.e("API_ERRO", "Erro na lista principal! Código: ${response.code()} | Mensagem: ${response.errorBody()?.string()}")
+                }
+
             } catch (e: Exception){
                 Log.e("API_FALHA", "Falhou a conexao malandro: ${e.message}")
             } finally {

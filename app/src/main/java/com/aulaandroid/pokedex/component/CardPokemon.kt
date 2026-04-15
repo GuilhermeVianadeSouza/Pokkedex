@@ -1,6 +1,7 @@
 package com.aulaandroid.pokedex.component
 
 import android.R
+import android.R.attr.contentDescription
 import android.R.attr.text
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -22,19 +23,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.aulaandroid.pokedex.model.Pokemon
+import com.aulaandroid.pokedex.ui.theme.obterCorPorTipo
 
 @Composable
 fun PokemonCard(pokemon: Pokemon,
                 modifier: Modifier = Modifier,
                 aoClicar: () -> Unit = {}
 ) {
+    val nomeDoPrimeiroTipo = pokemon.nomesDosTipos.firstOrNull()
+
+    val corDoFundo = obterCorPorTipo(nomeDoPrimeiroTipo)
+
+
     Card(
         modifier = modifier.fillMaxWidth()
             .aspectRatio(0.75F)
             .clickable{ aoClicar()},
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = corDoFundo)
     ) {
         Column(
             modifier = Modifier
@@ -51,12 +58,12 @@ fun PokemonCard(pokemon: Pokemon,
             )
 
             AsyncImage(
-                model = pokemon.sprites,
+                model = pokemon.sprites?.other?.officialArtwork?.frontDefault,
                 contentDescription = "Imagem do pokemon ${pokemon.name}",
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .padding(4.dp)
+                    .padding(8.dp)
             )
 
             Text(
